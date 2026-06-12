@@ -10,49 +10,65 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function store(Request $request)
-    {
-        $user = Auth::check() ? Auth::user() : null;
+public function store(Request $request)
+{
+    // 1. ADIM: HATA AYIKLAMA (Veriler geliyor mu?)
+    // Eğer veriler boş geliyorsa bu satır çalışınca ekranda boş bir dizi veya eksik değerler görürsün.
+    // dd($request->all()); 
 
-        $phone = trim((string) $request->input('phone', ''));
-        $phone = $phone !== '' ? $phone : null;
+    // 2. ADIM: VALIDASYON (Veritabanına boş veri gitmesini engeller)
+    // Eğer formdan veri gelmezse hata fırlatıp kullanıcıyı durdurur.
+    $request->validate([
+        'first_name' => 'required',
+        'last_name'  => 'required',
+        'email'      => 'required|email',
+        'material'   => 'required',
+        'size'       => 'required',
+        'subject'    => 'required',
+        'details'    => 'required',
+    ]);
 
-        if ($user && !empty($phone)) {
-            $user->forceFill(['phone' => $phone])->save();
-        }
+    $user = Auth::check() ? Auth::user() : null;
 
-        $offer = $request->input('offered_price');
-        $budget = $request->input('budget');
-        $selectedOffer = $offer !== null && trim((string) $offer) !== '' ? $offer : $budget;
-        $normalizedOffer = $selectedOffer !== null && trim((string) $selectedOffer) !== '' ? (string) number_format((float) $selectedOffer, 2, '.', '') : null;
+    $phone = trim((string) $request->input('phone', ''));
+    $phone = $phone !== '' ? $phone : null;
 
-        $order = Order::create([
-            'user_id' => $user?->id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $phone,
-            'material' => $request->material,
-            'size' => $request->size,
-            'offered_price' => $normalizedOffer,
-            'subject' => $request->subject,
-            'details' => $request->details,
-            'status' => 'Bekliyor',
-        ]);
-
-        if ($user) {
-            OrderActionLog::create([
-                'order_id' => $order->id,
-                'admin_name' => $user->name,
-                'customer_name' => $order->first_name.' '.$order->last_name,
-                'customer_email' => $order->email,
-                'action' => 'Talep Oluşturuldu',
-                'details' => 'Müşteri çizim talebi oluşturdu.',
-            ]);
-        }
-
-        return redirect()->back();
+    if ($user && !empty($phone)) {
+        $user->forceFill(['phone' => $phone])->save();
     }
+
+    $offer = $request->input('offered_price');
+    $budget = $request->input('budget');
+    $selectedOffer = $offer !== null && trim((string) $offer) !== '' ? $offer : $budget;
+    $normalizedOffer = $selectedOffer !== null && trim((string) $selectedOffer) !== '' ? (string) number_format((float) $selectedOffer, 2, '.', '') : null;
+
+    $order = Order::create([
+        'user_id'       => $user?->id,
+        'first_name'    => $request->first_name, // EĞER BU NULL GELİYORSA HATA BURADADIR
+        'last_name'     => $request->last_name,
+        'email'         => $request->email,
+        'phone'         => $phone,
+        'material'      => $request->material,
+        'size'          => $request->size,
+        'offered_price' => $normalizedOffer,
+        'subject'       => $request->subject,
+        'details'       => $request->details,
+        'status'        => 'Bekliyor',
+    ]);
+
+    if ($user) {
+        OrderActionLog::create([
+            'order_id'       => $order->id,
+            'admin_name'     => $user->name,
+            'customer_name'  => $order->first_name.' '.$order->last_name,
+            'customer_email' => $order->email,
+            'action'         => 'Talep Oluşturuldu',
+            'details'        => 'Müşteri çizim talebi oluşturdu.',
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Talebiniz başarıyla alındı!');
+}
 
     public function update(Request $request, Order $order)
     {

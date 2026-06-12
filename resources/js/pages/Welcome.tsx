@@ -2,7 +2,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Palette, Brush, LogIn, UserPlus, ArrowRight, PenTool, Heart, MessageCircle, X, Send, Info, CheckCircle2 } from 'lucide-react';
+import { Palette, Brush, LogIn, UserPlus, ArrowRight, PenTool, Heart, MessageCircle, X, Send, Info, CheckCircle2, Instagram } from 'lucide-react';
 
 // ==========================================
 // 1. RESİMLERİ İÇERİ AKTARMA (VITE IMPORTS)
@@ -494,8 +494,22 @@ const handleOrderSubmit = (e: React.FormEvent) => {
                 </div>
             )}
 
-            {/* SİPARİŞ BUTONU (YÜZEN BUTON) */}
-            <div className="fixed bottom-8 right-8 z-30">
+            {/* SİPARİŞ VE INSTAGRAM BUTONLARI (YÜZEN BUTONLAR) */}
+            <div className="fixed bottom-8 right-8 z-30 flex flex-col items-end gap-3">
+                <a 
+                    href="https://www.instagram.com/spelledlines/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                >
+                    <Button 
+                        type="button"
+                        className="h-12 px-5 rounded-full shadow-lg shadow-pink-900/20 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:opacity-90 text-white font-semibold flex items-center gap-2 hover:scale-105 transition-all border-0"
+                    >
+                        <Instagram size={20} />
+                        <span className="hidden sm:inline">Instagram'da Takip Et</span>
+                    </Button>
+                </a>
+
                 <Button 
                     onClick={() => setIsOrderModalOpen(true)}
                     className="h-14 px-6 rounded-full shadow-2xl shadow-rose-900/30 bg-rose-900 hover:bg-rose-950 text-white font-semibold flex items-center gap-2 hover:scale-105 transition-all"

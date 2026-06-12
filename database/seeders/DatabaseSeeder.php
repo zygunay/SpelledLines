@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
 
         $users = [
             ['first_name' => 'Zeynepnur', 'last_name' => 'Günay', 'username' => 'zeynepnur', 'email' => 'zeynurgunay@gmail.com', 'phone' => '05425215789', 'title' => 'Sistem Yöneticisi'],
+            ['first_name' => 'Fatma', 'last_name' => 'Erbek', 'username' => 'pakuga', 'email' => 'pakuga@gmail.com', 'phone' => '04534515789', 'title' => 'Sistem Yöneticisi'],
             ['first_name' => 'Tahsin', 'last_name' => 'Altın', 'username' => 'tahsinaltin', 'email' => 'altintahsin@gmail.com', 'phone' => '03657895487', 'title' => 'Sistem Yöneticisi'],
             ['first_name' => 'İlknur', 'last_name' => 'Yılmaz', 'username' => 'ilknur', 'email' => 'ilknur@spelledlines.com', 'phone' => '05551234567', 'title' => 'Operasyon Sorumlusu'],
             ['first_name' => 'Elif', 'last_name' => 'Demir', 'username' => 'elifdemir', 'email' => 'elif.demir@example.com', 'phone' => '05331234567', 'title' => 'Müşteri Destek'],
